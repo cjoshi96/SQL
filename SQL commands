@@ -1,0 +1,37 @@
+Questions:-
+
+1. Find the cheapest book of SIBM library. 
+2. Which library has the costliest book? 
+3. How many students from SIT issued the book? 
+4. What is the average cost of books in SITM library? 
+5. What is the total cost of purchase made by SSBS in the month of January? 
+6. How many books are written by “Shruti” 
+7. What is the costliest book published by “Pragati Book Store” 
+8. How many total copies of books do SIT has? 
+9. What is the average cost of books written by “Mr. Kumar”? 
+10. How many books are sold by seller living in Nagpur? 
+11. Print the student name in capital who belongs to SSBS 
+12. Add two months to the issue date of book written by “Ameya” 
+13. What was the last day of the month when Ayush issued the book 
+14. How many books are issued from January to march 2016? 
+15. Print name of Institute in capital which has highest number of books.
+
+Answers:-
+
+1) select min(price) where lid in (select Lid from books(select Lname="SIBM" from library))
+2) select lname from library where lid in (select lid from books where price in (select max(price) from books)) 
+3) select count(lid) from issue where lid in (select lid from library where Lname="SIT");
+4) select avg(price) from books where lid in (select lid from library where Lname="SITM");
+5) select sum(price) from books where lid in (select lid from purchase where month="Jan" and lid in (select lid from library where lname="SSBS"));
+6) select count(aid) from booksby where aid in (select aid from author where aname="Shruti");
+7) select max(price) from books where bid in (select bid from purchase where pid in (select pid from publisher where pname="Pragati Books Store"));
+8) select sum(totalcopies) from books where lid in (select lid from library where lname="SIT");
+9) select avg(price) from books where bid in (select bid from booksby where aid in (select aid from author where aname="Sujay"));
+10) select count(bid) from purchase where slid in (select slid from seller where city="Nagpur");
+11) select upper(sname) from student where deptid in (select deptid from department where institutename="SSBS");
+12) selct date_add(issue_date,interval 2 month) from issue where bid in (select bid from booksby where aid in (select aid from author where aname="Ameya"));
+13) select last_day(issue_date) from issue where memid in (select sid from student where sname="Ayush");
+14) select count(bid) from issue where issue_date between '2016-01-01' and '2016-03-31';
+15) select upper(Lname) from Library where lid in (select lid from books groupby (lid) having max(x.num) in (select sum(totalcopies) as num from books)x);
+select lid from books group by (lid) having max(num) in (select sum(totalcopies) as num from books group by (lid))
+select lname, sum(totalcopies) from library l, booksb where l.lid=b.lid and b.lid in (select lid from books group by (lid) having sum(totalcopies) in (select max(x.num) from (select lid, sum(totalcopies) as num from books group by (lid))x));

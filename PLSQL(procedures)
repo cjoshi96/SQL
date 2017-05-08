@@ -1,0 +1,27 @@
+1) Find details of books of a given library 
+
+Delimiter **
+create procedure books (IN lname text)
+
+Begin
+select * from books b, library l where b.lid=l.lid and l.lname=lname;
+End**
+Delimiter;
+
+2) Find total number of books written by a particular author
+
+Delimiter **
+create procedure totalbooks1 (IN aname text, OUT tot_cop int)
+
+Begin
+select count(b.bid) into tot_cop from booksby b, author a where b.aid=a.aid and a.aname=aname;
+End **
+
+3) Increase the price of books by 10% which are sold by a particular seller
+
+Delimiter |
+create procedure update2(IN slname text)
+
+Begin
+update books set price=price+(price*0.1) where bid in (select bid from purchase where slid in (select slid from seller where sname=slname));
+End |

@@ -1,0 +1,87 @@
+/* Multiply 2 numbers */
+Delimiter **
+create function multi(n1 int, n2 int)
+returns int
+
+Begin
+declare result int;
+set result=n1*n2;
+return result;
+End **
+
+/* Find max of 2 numbers */
+delimiter |
+create function maximum(x int, y int)
+returns int
+
+Begin
+declare z int;
+if x>y then
+set z=x;
+else
+set z=y;
+end if;
+return z;
+end |
+
+/* Find total number of books in SIU library */
+delimiter ||
+create function totalbooks1()
+returns int
+
+Begin
+declare total int;
+select sum(Totalcopies) into total from books;
+return total;
+end||
+
+/* Find average of 4 numbers */
+delimiter |
+create function aveg1(w int, x int, y int, z int)
+returns float
+
+Begin
+declare i float;
+set i=(w+x+y+z)/4;
+return i;
+End |
+
+/* Find factorial */
+delimiter |
+create function fact1(n1 int)
+returns int
+
+Begin
+declare res int;
+lable1: loop
+set res=n1*(n1-1);
+set n1=n1-1;
+if n1>1 then
+iterate lable1;
+end if;
+leave lable1;
+end loop lable1;
+return res;
+End |
+
+/* Find name of library having cheapest book of all */
+delimiter |
+create function cheap()
+returns text
+
+Begin
+declare lib text;
+select Lname from library l, books b where l.lid=b.lid and b.price in (select min(price) from books) into lib;
+return lib;
+End |
+
+/* Find total number of books issued by SIT staff */
+delimiter |
+create function tot()
+returns int
+
+Begin
+declare c int;
+select count(bid) into c from issue i, staff s where i.memid=s.stid;
+return c;
+End |
